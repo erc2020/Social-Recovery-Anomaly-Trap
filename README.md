@@ -1,94 +1,66 @@
-# Drosera Trap Foundry Template
+## Foundry
 
-This repo is for quickly bootstrapping a new Drosera project. It includes instructions for creating your first trap, deploying it to the Drosera network, and updating it on the fly.
+**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
 
-[![view - Documentation](https://img.shields.io/badge/view-Documentation-blue?style=for-the-badge)](https://dev.drosera.io "Project documentation")
-[![Twitter](https://img.shields.io/twitter/follow/DroseraNetwork?style=for-the-badge)](https://x.com/DroseraNetwork)
+Foundry consists of:
 
-## Configure dev environment
+- **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
+- **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
+- **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
+- **Chisel**: Fast, utilitarian, and verbose solidity REPL.
 
-```bash
-curl -L https://foundry.paradigm.xyz | bash
-foundryup
+## Documentation
 
-# The trap-foundry-template utilizes node modules for dependency management
-# install Bun (optional)
-curl -fsSL https://bun.sh/install | bash
+https://book.getfoundry.sh/
 
-# install node modules
-bun install
+## Usage
 
-# install vscode (optional)
-# - add solidity extension JuanBlanco.solidity
+### Build
 
-# install drosera-cli
-curl -L https://app.drosera.io/install | bash
-droseraup
+```shell
+$ forge build
 ```
 
-open the VScode preferences and Select `Soldity: Change workpace compiler version (Remote)`
+### Test
 
-Select version `0.8.12`
-
-## Quick Start
-
-### Hello World Trap
-
-The drosera.toml file is configured to deploy a simple "Hello, World!" trap. Ensure the drosera.toml file is set to the following configuration:
-
-```toml
-response_contract = "0xdA890040Af0533D98B9F5f8FE3537720ABf83B0C"
-response_function = "helloworld(string)"
+```shell
+$ forge test
 ```
 
-To deploy the trap, run the following commands:
+### Format
 
-```bash
-# Compile the Trap
-forge build
-
-# Deploy the Trap
-DROSERA_PRIVATE_KEY=0x.. drosera apply
+```shell
+$ forge fmt
 ```
 
-After successfully deploying the trap, the CLI will add an `address` field to the `drosera.toml` file.
+### Gas Snapshots
 
-Congratulations! You have successfully deployed your first trap!
-
-### Response Trap
-
-You can then update the trap by changing its logic and recompling it or changing the path field in the `drosera.toml` file to point to the Response Trap.
-
-The Response Trap is designed to trigger a response at a specific block number. To test the Response Trap, pick a future block number and update the Response Trap.
-Specify a response contract address and function signature in the drosera.toml file to the following:
-
-```toml
-response_contract = "0x183D78491555cb69B68d2354F7373cc2632508C7"
-response_function = "responseCallback(uint256)"
+```shell
+$ forge snapshot
 ```
 
-Finally, deploy the Response Trap by running the following commands:
+### Anvil
 
-```bash
-# Compile the Trap
-forge build
-
-# Deploy the Trap
-DROSERA_PRIVATE_KEY=0x.. drosera apply
+```shell
+$ anvil
 ```
 
-> Note: The `DROSERA_PRIVATE_KEY` environment variable can be used to deploy traps. You can also set it in the drosera.toml file as `private_key = "0x.."`.
+### Deploy
 
+```shell
+$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+```
 
-### Transfer Event Trap
-The TransferEventTrap is an example of how a Trap can parse event logs from a block and respond to a specific ERC-20 token transfer events.
+### Cast
 
-To deploy the Transfer Event Trap, uncomment the `transfer_event_trap` section in the `drosera.toml` file. Add the token address to the `tokenAddress` constant in the `TransferEventTrap.sol` file and then deploy the trap.
+```shell
+$ cast <subcommand>
+```
 
-## Testing
+### Help
 
-Example tests are included in the `tests` directory. They simulate how Drosera Operators execute traps and determine if a response should be triggered. To run the tests, execute the following command:
-
-```bash
-forge test
+```shell
+$ forge --help
+$ anvil --help
+$ cast --help
 ```
