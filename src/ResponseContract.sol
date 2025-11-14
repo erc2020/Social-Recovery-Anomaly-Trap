@@ -11,12 +11,25 @@ import {MockSocialRecoveryWallet} from "./MockSocialRecoveryWallet.sol";
  */
 contract ResponseContract {
     /**
-     * @dev HARDCODED address of the MockSocialRecoveryWallet.
-     * In a real-world deployment, this would be the address of the actual
-     * social recovery wallet you want to protect. This address must be
-     * set before deployment.
+     * @dev The address of the MockSocialRecoveryWallet.
+     * This is set in the constructor and is immutable.
      */
-    MockSocialRecoveryWallet constant socialRecoveryWallet = MockSocialRecoveryWallet(0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f); // Placeholder Address
+    MockSocialRecoveryWallet public immutable socialRecoveryWallet;
+
+    /**
+     * @dev The address that is allowed to call the triggerTimelock function.
+     * This would typically be a Drosera executor or a TrapConfig contract.
+     */
+    address public immutable allowed;
+
+    /**
+     * @param _wallet The address of the social recovery wallet to protect.
+     * @param _allowed The address authorized to trigger the response.
+     */
+    constructor(address _wallet, address _allowed) {
+        socialRecoveryWallet = MockSocialRecoveryWallet(_wallet);
+        allowed = _allowed;
+    }
 
     /**
      * @notice This function is called by the Drosera infrastructure when the
@@ -25,6 +38,7 @@ contract ResponseContract {
      * @param responseData The encoded data from the trap, not used in this simple case.
      */
     function triggerTimelock(bytes calldata responseData) external {
+        require(msg.sender == allowed, "unauthorized");
         // The responseData is available if needed, but for this simple response,
         // we just perform a direct action.
         socialRecoveryWallet.activateTimelock();
